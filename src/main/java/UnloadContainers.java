@@ -44,7 +44,7 @@ public class UnloadContainers {
     }
 
     public static ArrayList<String> readInstructionsFromFile(String filePath) throws IOException {
-        ArrayList<String> instructions = new ArrayList<String>();
+        ArrayList<String> instructions = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = br.readLine()) != null) {
@@ -63,8 +63,13 @@ public class UnloadContainers {
         return data;
     }
 
+    /**
+     * Process the containers according to the instructions
+     * @param data The current grid of containers
+     * @param instructions The instructions to execute
+     * @return The message encoded in the containers
+     */
     public static String processContainers(ArrayList<ArrayList<String>> data, ArrayList<String> instructions) {
-        // Foreach instruction call doIteration
         for (String instruction : instructions) {
             doIteration(data, instruction);
             // printContainers(data);
@@ -81,17 +86,23 @@ public class UnloadContainers {
         return message.toString();
     }
 
+    /**
+     * Execute a single instruction, moves containers in memory, mutates the underlying arraylists.
+     * @param data The current grid of containers
+     * @param instruction The instruction to execute
+     */
     public static void doIteration(ArrayList<ArrayList<String>> data, String instruction) {
         // I prompted copilot to use a regex here but this is what it spat out...
         String[] splitInstruction = instruction.split(" ");
-        int containers = Integer.parseInt(splitInstruction[1]);
+        int containersToMove = Integer.parseInt(splitInstruction[1]);
         int fromColumn = Integer.parseInt(splitInstruction[3]);
         int toColumn = Integer.parseInt(splitInstruction[5]);
 
         ArrayList<String> columnFrom = data.get(fromColumn - 1);
         ArrayList<String> columnTo = data.get(toColumn - 1);
 
-        for (int i = 0; i < containers; i++) {
+        // Move containers one by one taking from the top first (like a crane irl) and plonking on the target column
+        for (int i = 0; i < containersToMove; i++) {
             String container = columnFrom.remove(columnFrom.size() - 1);
             columnTo.add(container);
         }
