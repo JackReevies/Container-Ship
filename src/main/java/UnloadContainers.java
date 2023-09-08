@@ -23,6 +23,13 @@ public class UnloadContainers {
      */
 
     public static void main(String[] args) throws IOException {
+        mainTask();
+        extOne();
+        extTwo();
+        extThree();
+    }
+
+    public static void mainTask() throws IOException {
         String instructionsPath = System.getProperty("user.dir")+"/src/main/resources/data.txt";
         ArrayList<String> instructions = readInstructionsFromFile(instructionsPath);
 
@@ -36,6 +43,27 @@ public class UnloadContainers {
                 {"D","W","R","N","J","M"},
                 {"!","Z","T","F","H","N","D","J"},
                 {"H","E","Q","N","B","E","T"}
+        };
+        ArrayList<ArrayList<String>> data = convertToArrayList(dataArray);
+
+        var message = processContainers(data, instructions);
+        System.out.println(message);
+    }
+
+    public static void extOne() throws IOException {
+        String instructionsPath = System.getProperty("user.dir")+"/src/main/resources/data1.txt";
+        ArrayList<String> instructions = readInstructionsFromFile(instructionsPath);
+
+        String[][] dataArray = {
+                {"S","L","W"},
+                {"J","T","T","Q"},
+                {"S","C","H","F","J"},
+                {"T","F","M","W","T","G","B"},
+                {"S","A","L","S","D","H","Q","B"},
+                {"M","J","B","V","N","H","R","L"},
+                {"D","W","R","N","J","M"},
+                {"C","Z","T","F","H","N","D","J"},
+                {"H","A","Q","N","B","I","T"}
         };
         ArrayList<ArrayList<String>> data = convertToArrayList(dataArray);
 
