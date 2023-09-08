@@ -1,4 +1,9 @@
+import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class UnloadContainers {
 
@@ -18,13 +23,112 @@ public class UnloadContainers {
      */
 
     public static void main(String[] args) throws IOException {
+        String instructionsPath = System.getProperty("user.dir")+"/src/main/resources/data.txt";
+        ArrayList<String> instructions = readInstructionsFromFile(instructionsPath);
 
-        String instructions = System.getProperty("user.dir")+"\\src\\main\\resources\\data.txt";
+        String[][] dataArray = {
+                {"S","L","W"},
+                {"J","O","N","Q"},
+                {"S","C","H","L","J"},
+                {"T","W","M","W","L","G","B"},
+                {"O","D","L","S","D","H","Q","A"},
+                {"M","J","B","V","L","H","R","L"},
+                {"D","W","R","N","J","M"},
+                {"!","Z","T","F","H","N","D","J"},
+                {"H","E","Q","N","B","E","T"}
+        };
+        ArrayList<ArrayList<String>> data = convertToArrayList(dataArray);
 
-        //Create container ship
+        var message = processContainers(data, instructions);
+        System.out.println(message);
+    }
 
-        //Process containers
+    public static ArrayList<String> readInstructionsFromFile(String filePath) throws IOException {
+        ArrayList<String> instructions = new ArrayList<String>();
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                instructions.add(line);
+            }
+        }
+        return instructions;
+    }
 
-        //Reveal message
+    public static ArrayList<ArrayList<String>> convertToArrayList(String[][] dataArray) {
+        ArrayList<ArrayList<String>> data = new ArrayList<>();
+        for (String[] row : dataArray) {
+            ArrayList<String> rowList = new ArrayList<>(Arrays.asList(row));
+            data.add(rowList);
+        }
+        return data;
+    }
+
+    public static String processContainers(ArrayList<ArrayList<String>> data, ArrayList<String> instructions) {
+        // Foreach instruction call doIteration
+        for (String instruction : instructions) {
+            doIteration(data, instruction);
+            // printContainers(data);
+        }
+
+        // Get the top item in each column
+        StringBuilder message = new StringBuilder();
+        for (ArrayList<String> column : data) {
+            if (column.size() > 0) {
+                message.append(column.get(column.size() - 1));
+            }
+        }
+
+        return message.toString();
+    }
+
+    public static void doIteration(ArrayList<ArrayList<String>> data, String instruction) {
+        // I prompted copilot to use a regex here but this is what it spat out...
+        String[] splitInstruction = instruction.split(" ");
+        int containers = Integer.parseInt(splitInstruction[1]);
+        int fromColumn = Integer.parseInt(splitInstruction[3]);
+        int toColumn = Integer.parseInt(splitInstruction[5]);
+
+        ArrayList<String> columnFrom = data.get(fromColumn - 1);
+        ArrayList<String> columnTo = data.get(toColumn - 1);
+
+        for (int i = 0; i < containers; i++) {
+            String container = columnFrom.remove(columnFrom.size() - 1);
+            columnTo.add(container);
+        }
+    }
+
+    /**
+     * Thanks copilot - It works but my mind glazes over trying to read this
+     */
+    public static void printContainers(ArrayList<ArrayList<String>> data) {
+        int numRows = data.size();
+        int numCols = 0;
+        for (ArrayList<String> row : data) {
+            if (row.size() > numCols) {
+                numCols = row.size();
+            }
+        }
+        String[][] grid = new String[numCols][numRows];
+        for (int i = 0; i < numRows; i++) {
+            for (int j = 0; j < numCols; j++) {
+                if (j < data.get(i).size()) {
+                    grid[numCols - j - 1][i] = data.get(i).get(j);
+                } else {
+                    grid[numCols - j - 1][i] = "";
+                }
+            }
+        }
+        for (int i = 0; i < numCols; i++) {
+            for (int j = 0; j < numRows; j++) {
+                String container = grid[i][j];
+                if (container.isEmpty()) {
+                    System.out.print("[ ]");
+                } else {
+                    System.out.print("[" + container + "]");
+                }
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 }
