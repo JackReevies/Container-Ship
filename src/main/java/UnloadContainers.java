@@ -43,6 +43,12 @@ public class UnloadContainers {
         System.out.println(message);
     }
 
+    /**
+     * Read the instructions from a file
+     * @param filePath The path to the file
+     * @return The instructions
+     * @throws IOException If the file cannot be read or found
+     */
     public static ArrayList<String> readInstructionsFromFile(String filePath) throws IOException {
         ArrayList<String> instructions = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -109,7 +115,9 @@ public class UnloadContainers {
     }
 
     /**
-     * Thanks copilot - It works but my mind glazes over trying to read this
+     * Print the containers in a grid format like in the example.
+     * Thanks copilot - It works but my mind glazes over trying to read this.
+     * @param data The current grid of containers
      */
     public static void printContainers(ArrayList<ArrayList<String>> data) {
         int numRows = data.size();
