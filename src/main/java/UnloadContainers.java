@@ -25,8 +25,6 @@ public class UnloadContainers {
     public static void main(String[] args) throws IOException {
         mainTask();
         extOne();
-        extTwo();
-        extThree();
     }
 
     public static void mainTask() throws IOException {
